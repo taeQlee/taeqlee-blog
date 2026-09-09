@@ -15,7 +15,7 @@ export function PostList({ posts }: { posts: Post[] }) {
   }
 
   return (
-    <ol className="grid grid-cols-1 gap-x-28 gap-y-12 md:grid-cols-2 md:gap-y-14 px-2 pb-10">
+    <ol className="grid grid-cols-1 gap-x-28 gap-y-12 md:grid-cols-2 md:gap-y-14 px-1 pb-10">
       {posts.map((post) => (
         <li key={`${post.category}-${post.slug}`}>
           <Link
