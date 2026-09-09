@@ -10,7 +10,10 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Tae Q. Lee", template: "%s — Tae Q. Lee" },
+  title: {
+    default: "taeQ.dev",
+    template: "%s — taeQ.dev",
+  },
   description:
     "Technical notes and essays about computers, software, and the physical world.",
 };
