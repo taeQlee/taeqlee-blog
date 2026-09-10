@@ -39,8 +39,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <div className="site-shell">
           <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <footer className="flex items-center justify-center border-[var(--border)] py-16 text-sm text-[var(--muted)]">
+          <main className="min-h-0 flex-1">{children}</main>
+          <footer className="flex items-center justify-center border-[var(--border)] py-6 text-sm text-[var(--muted)] sm:py-16">
             © {new Date().getFullYear()} Tae Q. Lee
           </footer>
         </div>

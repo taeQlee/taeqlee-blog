@@ -57,6 +57,15 @@ button {
   flex-direction: column;
 }
 
+.home-image {
+  position: relative;
+  aspect-ratio: 1200 / 630;
+  margin-top: 1.25rem;
+  overflow: hidden;
+  border-radius: 0.625rem;
+  background: var(--surface);
+}
+
 .section-label {
   margin-bottom: 1.5rem;
   font-family: var(--font-fira-code), monospace;
@@ -132,7 +141,19 @@ button {
 @media (max-width: 30rem) {
   .site-shell {
     width: min(100% - 2rem, 46rem);
-    min-height: auto;
+    height: 100dvh;
+    min-height: 0;
+  }
+  .home-page {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    flex-direction: column;
+  }
+  .home-image {
+    min-height: 0;
+    flex: 1;
+    aspect-ratio: auto;
   }
 }
 @media (prefers-reduced-motion: reduce) {
