@@ -22,8 +22,7 @@ export const metadata: Metadata = {
 const themeScript = `
   try {
     const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.classList.toggle("dark", savedTheme === "dark" || (!savedTheme && prefersDark));
+    document.documentElement.classList.toggle("dark", savedTheme !== "light");
   } catch (_) {}
 `;
 
@@ -32,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${firaCode.variable} antialiased`}
+      className={`${inter.variable} ${firaCode.variable} dark antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
