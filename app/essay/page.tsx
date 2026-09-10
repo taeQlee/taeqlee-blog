@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { PageIntro } from "@/components/page-intro";
-import { PostList } from "@/components/post-list";
+import { PageIntro } from "@/components/PageIntro";
+import { PostList } from "@/components/PostList";
 import { getPostsByCategory } from "@/lib/posts";
 
 export const metadata: Metadata = { title: "Essay", description: "Personal essays about learning, technology, and making things." };

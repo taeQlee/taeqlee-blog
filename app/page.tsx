@@ -1,5 +1,5 @@
-import { PageIntro } from "@/components/page-intro";
-import { PostList } from "@/components/post-list";
+import { PageIntro } from "@/components/PageIntro";
+import { PostList } from "@/components/PostList";
 import { getAllPosts } from "@/lib/posts";
 
 export default function HomePage() {

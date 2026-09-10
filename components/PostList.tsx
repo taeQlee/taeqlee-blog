@@ -1,13 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Post } from "@/lib/posts";
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "2-digit",
-  year: "numeric",
-  timeZone: "UTC",
-});
+import { PostMeta } from "@/components/PostMeta";
 
 export function PostList({ posts }: { posts: Post[] }) {
   if (posts.length === 0) {
@@ -24,7 +18,7 @@ export function PostList({ posts }: { posts: Post[] }) {
           >
             <article className="flex h-full flex-col">
               {post.thumbnailUrl ?
-                <div className="relative mb-5 aspect-video overflow-hidden rounded-sm bg-[var(--surface)]">
+                <div className="relative mb-5 aspect-video overflow-hidden rounded-[10px] bg-[var(--surface)]">
                   <Image
                     src={post.thumbnailUrl}
                     alt=""
@@ -40,12 +34,11 @@ export function PostList({ posts }: { posts: Post[] }) {
               <p className="mt-3 line-clamp-4 leading-relaxed text-[var(--muted)] md:text-lg">
                 {post.description}
               </p>
-              <time
-                dateTime={post.date}
-                className="mt-3 block text-base tracking-[-0.04em] text-[var(--muted)] italic"
-              >
-                {dateFormatter.format(new Date(`${post.date}T00:00:00Z`))}
-              </time>
+              <PostMeta
+                date={post.date}
+                readingTimeMinutes={post.readingTimeMinutes}
+                className="mt-3 text-base tracking-[-0.04em] italic"
+              />
             </article>
           </Link>
         </li>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageIntro } from "@/components/page-intro";
+import { PageIntro } from "@/components/PageIntro";
 
 export const metadata: Metadata = {
   title: "About",

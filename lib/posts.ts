@@ -4,19 +4,35 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-export const postCategories = ["tech", "essay"] as const;
+export const postCategories = ["tech", "essay", "study", "project"] as const;
 export type PostCategory = (typeof postCategories)[number];
 
 export type Post = {
   title: string;
   description: string;
   date: string;
+  readingTimeMinutes: number;
   category: PostCategory;
   slug: string;
   thumbnailUrl?: string;
 };
 
 const contentDirectory = path.join(process.cwd(), "content");
+
+function calculateReadingTime(content: string) {
+  const readableText = content
+    .replace(/^import\s.+;$/gm, "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/[`#>*_[\]()-]/g, " ");
+  const koreanCharacters = (readableText.match(/[가-힣]/g) ?? []).length;
+  const nonKoreanWords = readableText
+    .replace(/[가-힣]/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+
+  return Math.max(1, Math.ceil(koreanCharacters / 500 + nonKoreanWords / 200));
+}
 
 function isCategory(value: string): value is PostCategory {
   return postCategories.includes(value as PostCategory);
@@ -25,7 +41,7 @@ function isCategory(value: string): value is PostCategory {
 function readPost(category: PostCategory, filename: string): Post {
   const slug = filename.replace(/\.mdx$/, "");
   const filePath = path.join(contentDirectory, category, filename);
-  const { data } = matter(fs.readFileSync(filePath, "utf8"));
+  const { data, content } = matter(fs.readFileSync(filePath, "utf8"));
 
   if (
     typeof data.title !== "string" ||
@@ -56,6 +72,7 @@ function readPost(category: PostCategory, filename: string): Post {
     title: data.title,
     description: data.description,
     date,
+    readingTimeMinutes: calculateReadingTime(content),
     category,
     slug,
     thumbnailUrl: data.thumbnailUrl,

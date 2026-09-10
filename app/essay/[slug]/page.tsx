@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PostArticle } from "@/components/post-article";
+import { PostArticle } from "@/components/PostArticle";
 import { getPost, getPostsByCategory } from "@/lib/posts";
 
 type PostPageProps = { params: Promise<{ slug: string }> };

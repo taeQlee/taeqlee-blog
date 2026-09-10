@@ -1,0 +1,5 @@
+export default function ImageGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-8 grid grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
+  );
+}

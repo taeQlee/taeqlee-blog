@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -11,8 +11,8 @@ const firaCode = Fira_Code({
 
 export const metadata: Metadata = {
   title: {
-    default: "taeQ.dev",
-    template: "%s — taeQ.dev",
+    default: "taeQlee",
+    template: "%s — taeQlee",
   },
   description:
     "Technical notes and essays about computers, software, and the physical world.",

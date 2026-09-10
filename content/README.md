@@ -1,6 +1,6 @@
 # Content
 
-MDX files in `tech/` and `essay/` are the blog's data source. The filename is
+MDX files in `tech/`, `essay/`, `study/`, and `project/` are the blog's data source. The filename is
 the URL slug, so `tech/browser-rendering.mdx` becomes
 `/tech/browser-rendering`.
 

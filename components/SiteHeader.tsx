@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
   { href: "/tech", label: "Tech" },
   { href: "/essay", label: "Essay" },
+  { href: "/study", label: "Study" },
+  { href: "/project", label: "Project" },
   { href: "/about", label: "About" },
 ];
 
@@ -12,9 +14,22 @@ export function SiteHeader() {
     <header className="flex items-center justify-between border-[var(--border)] py-5 sm:py-6">
       <Link
         href="/"
-        className="text-xl font-bold tracking-[-0.03em] transition-opacity hover:opacity-60 sm:text-2xl"
+        aria-label="Home"
+        className="grid size-8 place-items-center rounded-full text-[var(--foreground)] transition-colors hover:bg-[var(--surface)]"
       >
-        taeQ.dev
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="size-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m3.5 10.5 8.5-7 8.5 7" />
+          <path d="M5.5 9v11h13V9M9.5 20v-6h5v6" />
+        </svg>
       </Link>
       <div className="flex items-center gap-4 sm:gap-6">
         <nav aria-label="Primary navigation">
