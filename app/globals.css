@@ -141,19 +141,7 @@ button {
 @media (max-width: 30rem) {
   .site-shell {
     width: min(100% - 2rem, 46rem);
-    height: 100dvh;
-    min-height: 0;
-  }
-  .home-page {
-    display: flex;
-    height: 100%;
-    min-height: 0;
-    flex-direction: column;
-  }
-  .home-image {
-    min-height: 0;
-    flex: 1;
-    aspect-ratio: auto;
+    min-height: 100dvh;
   }
 }
 @media (prefers-reduced-motion: reduce) {
