@@ -5,7 +5,6 @@ import type { Post, PostCategory } from "@/lib/posts";
 import { PostMeta } from "@/components/PostMeta";
 
 const categoryLabels: Record<PostCategory, string> = {
-  tech: "Tech",
   essay: "Essay",
   study: "Study",
   project: "Project",

@@ -1,8 +1,8 @@
 # Content
 
-MDX files in `tech/`, `essay/`, `study/`, and `project/` are the blog's data source. The filename is
-the URL slug, so `tech/browser-rendering.mdx` becomes
-`/tech/browser-rendering`.
+MDX files in `essay/`, `study/`, and `project/` are the blog's data source. The filename is
+the URL slug, so `essay/why-i-start-blog.mdx` becomes
+`/essay/why-i-start-blog`.
 
 Every post must include this frontmatter:
 

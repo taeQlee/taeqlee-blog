@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-export const postCategories = ["tech", "essay", "study", "project"] as const;
+export const postCategories = ["essay", "study", "project"] as const;
 export type PostCategory = (typeof postCategories)[number];
 
 export type Post = {

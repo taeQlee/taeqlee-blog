@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s — taeQlee",
   },
   description:
-    "Technical notes and essays about computers, software, and the physical world.",
+    "Essays and study notes about computers, software, and the physical world.",
 };
 
 const themeScript = `

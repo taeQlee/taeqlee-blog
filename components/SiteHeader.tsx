@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
-  { href: "/tech", label: "Tech" },
   { href: "/essay", label: "Essay" },
   { href: "/study", label: "Study" },
   { href: "/project", label: "Project" },
