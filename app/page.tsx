@@ -1,19 +1,18 @@
 import { PageIntro } from "@/components/PageIntro";
-import { PostList } from "@/components/PostList";
-import { getAllPosts } from "@/lib/posts";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
     <>
-      <PageIntro title="안녕하세요. taeQ 입니다.">
-        백엔드 개발자의 학습 기록과 회고
-      </PageIntro>
-      <section aria-labelledby="recent-posts" className="mt-14 sm:mt-16">
-        <h2 id="recent-posts" className="section-label">
-          Recent writing
-        </h2>
-        <PostList posts={getAllPosts()} />
-      </section>
+      <PageIntro>백엔드 개발자의 학습 기록과 회고</PageIntro>
+      <Image
+        src="/images/mainImage.png"
+        alt="블로그 대표 이미지"
+        width={1200}
+        height={630}
+        loading="eager"
+        className="mx-auto mt-5 h-auto max-h-[calc(100dvh-23rem)] w-auto max-w-full rounded-[10px] object-contain"
+      />
     </>
   );
 }
