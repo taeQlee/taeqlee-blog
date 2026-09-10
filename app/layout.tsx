@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });

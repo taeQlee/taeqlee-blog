@@ -137,6 +137,11 @@ button {
   padding: 0;
   background: transparent;
 }
+.post-content .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.25rem;
+}
 
 @media (max-width: 30rem) {
   .site-shell {
