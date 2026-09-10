@@ -132,6 +132,7 @@ button {
 @media (max-width: 30rem) {
   .site-shell {
     width: min(100% - 2rem, 46rem);
+    min-height: auto;
   }
 }
 @media (prefers-reduced-motion: reduce) {
