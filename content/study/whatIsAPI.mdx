@@ -1,0 +1,240 @@
+---
+title: "API 에 대한 고찰"
+description: "Programming Interface와 API의 규칙, Communication의 의미를 통해 API의 범위 이해하기"
+date: "2026-09-12"
+thumbnailUrl: "/images/study/API.png"
+---
+
+## API란 무엇인가?
+
+<img
+  src="/images/study/components.png"
+  alt="Software components"
+  className="rounded-[16px]"
+/>
+
+## API는 _두 개의 Software Component가 서로 Interaction하기 위해 따라야 하는 Contract다_.
+
+1.  *Software Component: Software Component는 소프트웨어 시스템을 구성하는 독립적으로 구분 가능한 부분*으로, 다음과 같은 것들이 포함된다.
+    - 하나의 함수
+    - 하나의 클래스
+    - 하나의 라이브러리
+    - 하나의 모듈
+    - 하나의 스레드
+    - 하나의 프로세스
+    - 하나의 서비스 혹은 시스템
+
+2.  *Interaction: 한 Software Component의 동작이나 정보가 다른 Software Component에 전달되어 그 Component의 동작이나 상태에 영향을 주는 것*으로, 다음과 같은 것들이 있다.
+    - Function Call
+    - Method Call
+    - HTTP Request/Response
+    - IPC
+    - Socket Communication
+    - Database Query
+
+3.  Contract: API의 본체라고 할 정도로 가장 중요한 부분으로 *상호작용할 때 양쪽이 지켜야 하는 사전에 정의된 규칙*을 의미한다. 이에 관한 예시와 세부 사항은 아래에서 더욱 자세히 살펴본다.
+
+## Contract에서 정의해야 하는 것들(세부 사항)
+
+---
+
+    Contract에서는 Input, Output, Error, Side Effect가 정의되어야 한다. Library가 제공하는 API라면 Input은 Arguments를 의미하고, Server가 제공하는 API라면 대표적으로
+    (HTTP 기준) Header와 Payload(Body)에 들어가야 할 Data를 의미한다. Output은 구현된 API가 실행된 후 호출자가 받게 되는 Return Value를 의미한다.
+    Error는 구현된 API가 정상적으로 실행되지 않았을 때의 Return Value와 그때 발생하는 Side Effect를 의미한다. Side Effect는
+    Return Value를 전달하는 것 외에 발생하는 '외부에서 관측 가능한 상태 변화' 혹은 I/O 작업이다.
+
+    > Contract에서 잊지 말아야 할 것은 실제 구현이 이를 제공하는 Provider마다 다를 수 있다는 점이다. 내부 자료 구조에는 C++ 혹은 Rust를 사용할 수도 있고,
+    Routing도 다르게 구현할 수 있다.
+
+    그렇다면 이제부터 실제 GitHub의 Repository를 생성하는 Create an organization repository Operation이 어떻게 명시되어 있는지 살펴보자.
+    [출처링크](https://docs.github.com/en/rest/repos/repos?utm_source=chatgpt.com&apiVersion=2026-03-10#create-an-organization-repository)
+
+### _1. Input_
+
+공식 문서를 기준으로 주요 Input은 다음과 같다. name은 필수이고, description, homepage, private, is_template 등은 선택적이다. private의 기본값은 false다. 또한 Authorization Header가 필요하고, Accept: application/vnd.github+json의 사용을 권장한다.
+
+```
+POST /user/repos
+Authorization: Bearer <TOKEN>
+Accept: application/vnd.github+json
+Content-Type: application/json
+```
+
+```
+{
+"name": "Hello-World",
+"description": "This is your first repo!",
+"homepage": "https://github.com",
+"private": false,
+"is_template": true
+}
+```
+
+### _2. Output_
+
+성공하면 GitHub는 201 Created와 함께 새로 생성된 Repository를 나타내는 JSON Object를 반환한다. 공식 예시에는 id, name, full_name, owner, private, html_url 등의 Field가 포함된다.
+
+- HTTP Status: 201 Created
+- Body:
+
+```json
+{
+  "id": 1296269,
+  "name": "Hello-World",
+  "full_name": "octocat/Hello-World",
+  "private": false
+}
+```
+
+### _3. Error_
+
+공식 문서에는 다음 Status Code들이 명시되어 있다. [링크](https://docs.github.com/en/rest/repos/repos?utm_source=chatgpt.com&apiVersion=2026-03-10)
+
+```
+인증 토큰이 없다면 -> 401 Requires authentication
+잘못된 Repository 이름이나 Validation 문제가 있다면 -> 422 Validation failed
+```
+
+같은 Error가 발생할 수 있다.
+
+### _4. Side Effect_
+
+이 요청이 성공하면 GitHub System의 Persistent State에 새로운 Repository Resource가 생성된다.
+
+따라서 Side Effect는 다음과 같다.
+
+```
+Authenticated User 소유의 새로운 Repository가 생성됨
+GitHub가 관리하는 Persistent State가 변경됨
+```
+
+이것이 Output과 완전히 다른 부분이다.
+
+```
+Repository가 실제로 생성됨 ≠ Repository JSON을 반환함
+```
+
+전자는 Side Effect, 후자는 Output이다.
+
+## API Specification 완성 후: Implementation
+
+---
+
+이후 실제 Provider가 정의된 API Specification을 참고하여 API를 구현한다.
+Web API의 경우 Chrome, Safari, Firefox 같은 Browser가 Provider가 된다. 이때 실제 Code로 구현되는 것이 `document.querySelector()` 같은 Interface 또는 그 Interface를 통해 접근할 수 있는 Method다. 물론 이러한 Explicit Interface가 아닌 다른 방식으로 구현될 수도 있다.
+
+HTTP API에서도 마찬가지다. 예를 들어 위에서 봤던 REST API Contract가 정의되어 있다고 가정하자.
+
+```text
+POST /user/repos
+
+Input
+- name: string, required
+- description: string, optional
+- private: boolean, optional
+
+Output
+- 201 Created
+- 생성된 Repository를 나타내는 JSON Object
+
+Error
+- 400 Bad Request
+- 401 Unauthorized
+- 403 Forbidden
+- 422 Validation Error
+
+Side Effect
+- 새로운 Repository Resource가 생성되어 Persistent State가 변경됨
+```
+
+이 Contract는 **외부에서 무엇을 요청할 수 있으며 그 결과 어떤 동작이 보장되어야 하는지**를 정의할 뿐, Provider 내부에서 이를 어떤 Programming Language, Framework, Function, Database로 구현해야 하는지는 규정하지 않는다.
+
+따라서 동일한 Contract를 서로 다른 Provider가 전혀 다른 방식으로 구현할 수 있다.
+
+예를 들어 Spring Boot로 구현한다면 `@PostMapping`을 사용하여 HTTP Request를 Java Handler Method에 연결할 수 있다.
+
+```java
+@PostMapping("/user/repos")
+public ResponseEntity<Repository> createRepository(
+        @RequestBody CreateRepositoryRequest request) {
+
+    Repository repository =
+        repositoryService.create(request);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(repository);
+}
+```
+
+내부의 `repositoryService.create()`는 PostgreSQL에 데이터를 저장하도록 구현할 수도 있다.
+
+```text
+HTTP POST Request
+        ↓
+Spring MVC
+        ↓
+createRepository()
+        ↓
+RepositoryService
+        ↓
+PostgreSQL
+```
+
+반면 다른 Provider는 동일한 API Contract를 FastAPI로 구현할 수 있다.
+
+```python
+@app.post("/user/repos", status_code=201)
+def create_repository(request: CreateRepositoryRequest):
+    repository = repository_service.create(request)
+    return repository
+```
+
+그리고 내부에서는 PostgreSQL이 아니라 다른 Persistent Storage를 사용할 수도 있다.
+
+중요한 것은 두 Provider가 모두 Contract에서 요구하는 Input을 받아들이고, 성공했을 때 새로운 Repository를 생성하는 Side Effect를 발생시키며, 규정된 형태의 Output을 반환하고, 실패 상황에서는 정의된 Error를 제공해야 한다는 점이다.
+
+따라서 **API의 Implementation이 동일할 필요는 없다.** 중요한 것은 내부 구현 방식이 아니라 외부에서 관찰 가능한 동작이 API Specification 또는 Contract를 준수하는지다.
+
+## API는 누가, 왜 만드는걸까?
+
+---
+
+Programming 영역에는 수많은 API가 있다.
+분류해 보면 다음과 같다.
+
+- Web API: Browser가 JavaScript에 제공. 예: document.querySelector(), fetch(), localStorage, WebSocket
+- OS API: Operating System이 Program에 제공. 예: POSIX open(), read(), write(), Windows API CreateFile()
+- Library API: Library가 User Code에 제공. 예: React useState(), Java ArrayList.add(), NumPy np.array()
+- Framework API: Framework가 Application Code에 제공. 예: Spring @GetMapping, React Hooks, Django ORM
+- Runtime API: Runtime이 Program에 제공. 예: Node.js fs.readFile(), JVM Standard API
+- Remote / Network API: 다른 Process나 Remote Server가 Network를 통해 제공. 예: REST API, GraphQL API, gRPC API, Google Maps API, Kakao API
+- Database API: DBMS나 Database Driver가 제공. 예: JDBC, PostgreSQL Client API, SQLAlchemy API
+- Hardware / Device API: Device나 Driver 기능에 접근. 예: CUDA API, OpenGL/Vulkan API, Camera API, Bluetooth API
+- Kernel / System-call API: User Space Program이 Kernel 기능을 사용. 예: Linux read, write, fork, mmap
+
+한 분야 안에도 다시 수많은 API가 있다.
+예를 들어 Web API에는 대표적인 DOM API, Fetch API, History API, WebSocket API 등
+100개 이상의 API가 존재한다. 실제 목록은 [MDN의 Web API 목록](https://developer.mozilla.org/en-US/docs/Web/API)에서 확인할 수 있다.
+
+그리고 이러한 Web API가 모든 Browser에 구현되어 있다고 기대해서는 안 된다.
+Browser에 따라 구현되지 않은 API도 충분히 존재한다.
+예를 들어 WebUSB는 Chrome 계열 Browser에서는 지원되지만 Firefox와 Safari에서는 지원되지 않는다.
+[MDN도 WebUSB를 일부 주요 Browser에서 동작하지 않는 Limited Availability 기능](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API)으로 분류한다.
+
+> **이러한 API는 누가, 그리고 왜 만드는가?**
+>
+> **누가 만드는가?**  
+> WHATWG는 HTML, DOM, Fetch, URL 같은 핵심 Web Standard를 다룬다.
+> W3C는 WebRTC, WebAuthn과 일부 Device 및 Graphics 관련 Standard를 다룬다.
+> Google/Chromium, Mozilla/Firefox, Apple/WebKit 같은 Browser Vendor도 실제 제안, 토론, 구현에 참여한다.
+> 경우에 따라 Microsoft, Intel과 기타 기업 및 Developer Community도 제안과 구현에 참여한다.
+>
+> **왜 만드는가?**  
+> Web에 필요한 새로운 기능을 여러 Browser와 Application이 동일한 방식으로 제공하도록 만들기 위해서다.
+> 공통 Specification이 없다면 같은 Code가 Browser마다 다르게 동작하고,
+> Developer는 각 구현에 맞는 별도의 Code를 작성해야 한다.
+> Standard와 그에 대응하는 Test는 독립된 구현들이 같은 Contract를 따르게 하여
+> Compatibility와 Interoperability를 높인다.
+> WHATWG 역시 Standard와 Test를 유지하는 목적을
+> [독립적인 구현과 상호운용성을 촉진하는 것](https://whatwg.org/working-mode)으로 설명한다.
