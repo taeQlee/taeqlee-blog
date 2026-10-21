@@ -1,0 +1,351 @@
+---
+title: "Making my own Web Browser from scratch with Python"
+description: "Web Browser Engineering 공부 기록"
+date: "2026-10-20"
+---
+
+{/* 여기에 포스팅 내용을 작성하세요. */}
+
+## introduction
+
+---
+
+## Browsers and the Web/4 : Browser code concept
+
+To summarize this article, browsers adopt inversion of control (IoC) and declarative programming despite their trade-offs because these approaches allow developers to deploy content on the web without worrying about implementation details. They also make that content instantly accessible on almost any computing device while helping prevent software from becoming obsolete.
+
+## Browsers and the Web/5 : The Role of Browser
+
+The web has become central to modern computing, extending far beyond its original purpose of sharing documents.
+Many desktop and mobile applications now rely on web technologies, **embedding a browser to render parts of the application user interface(UI)**
+So, Understanding how browsers work is therefore crucial to understanding modern computing.
+
+## History of the Web/2 : The Web Emerges
+
+The World Wide Web evolved from earlier hypertext systems that introduced hyperlinks, graphical interfaces, and interactive features. In 1989–1990, Tim Berners-Lee combined hypertext with the internet to create the first web browser and server. The web’s defining feature was its decentralized architecture, allowing people to publish and link information independently. This openness, along with universal URLs, compatibility, and network effects, helped the web grow into a global platform.
+
+## History of the Web/3 : Browsers
+
+In my understanding, there have been two major browser wars in the history of the web.
+During the **first browser war (1995–2001)**, many core web technologies that are still used today, such as CSS, the DOM, and JavaScript, were introduced.
+During the **second browser war (2004–2017)**, modern web technologies such as AJAX and HTML5 became widespread, alongside the rapid growth of JavaScript libraries and frameworks. Meanwhile, Chrome forked its rendering engine from WebKit to create Blink in 2013, which Microsoft Edge later adopted in 2020.
+
+<div className="browser-gallery">
+
+**ViolaWWW**
+
+![ViolaWWW browser interface](/images/study/violawww.png)
+
+**NCSA Mosaic**
+
+![NCSA Mosaic browser interface](/images/study/mosaic.png)
+
+**Netscape Navigator 1.22**
+
+![Netscape Navigator 1.22 browser interface](/images/study/netscape.png)
+
+**Internet Explorer 1.0**
+
+![Internet Explorer 1.0 browser interface](/images/study/ie1.png)
+
+</div>
+
+## History of the Web/4 : Web Stadards
+
+In 1994, the W3C was established to standardize web technologies, helping browsers follow common specifications rather than develop incompatible features. Today, organizations such as WHATWG, W3C, TC39, and IETF maintain standards for HTML, CSS, JavaScript, and HTTP. Despite intense competition, browsers prioritized compatibility because websites needed to work across different browsers. This competition accelerated innovation, transforming the web from a simple document-viewing system into a powerful computing platform. Ultimately, the web itself was the real winner of the browser wars, gaining more users, capabilities, and well-established standards.
+
+## History of the Web/5 : Open Source
+
+Modern browsers may seem different, but they are largely based on three open-source rendering engines: Blink, Gecko, and WebKit. All three have roots dating back to the 1990s, although only Gecko descends from Netscape.
+This is no accident. Open-source development allows browsers to share code, reuse existing implementations, and benefit from contributions by independent developers, making it one of the most cost-effective ways to develop a rendering engine.
+
+## Part 1 : Loading pages
+
+---
+
+## Downloading Web pages/1 : Connecting to a Server
+
+<div className="browser-gallery">
+
+![URL structure showing the scheme, hostname, and path](/images/study/url-structure.svg)
+
+</div>
+
+From a URL, the browser can start the process of downloading the web page. The browser first asks the local operating system (OS) to put it in touch with the server described by the host name. The OS then talks to a Domain Name System (DNS) server which converts a host name like example.org into a destination IP address like 93.184.216.34. Then the OS decides which hardware is best for communicating with that destination IP address (say, wireless or wired) using what is called a routing table, and then uses device drivers to send signals over a wire or over the air. Those signals are picked up and transmitted by a series of routers which each choose the best direction to send your message so that it eventually gets to the destination. When the message reaches the server, a connection is created. Anyway, the point of this is that the browser tells the OS, “Hey, put me in touch with example.org”, and it does.
+
+## Downloading Web pages/2 : Requesting Information
+
+Once it’s connected, the browser requests information from the server by giving its path, the path being the part of a URL that comes after the host name, like /index.html. The structure of the request is shown below
+
+<div className="browser-gallery">
+
+![HTTP request structure](/images/study/http-request.svg)
+
+</div>
+
+## Downloading Web pages/3 : The Server's Response
+
+<div className="browser-gallery">
+
+![HTTP server response with headers and an HTML body](/images/study/http-response.svg)
+
+</div>
+
+The server's response begins with a status line, such as "HTTP/1.1 404 Not Found." HTTP status codes are divided into five categories: 1xx for informational responses, 2xx for successful requests, 3xx for redirection, 4xx for client errors, and 5xx for server errors.
+One clever aspect of this design is that the 4xx and 5xx categories help us identify which side is responsible for an error: the client or the server.
+After the status line, the server sends response headers, followed by a blank line that separates the headers from the response body. The body may contain HTML code, which the browser can parse and render as a web page.
+
+## Downloading Web pages/4 : Telnet in Python
+
+So far we’ve communicated with another computer using telnet. But it turns out that telnet is quite a simple program, and we can do the same programmatically. It’ll require extracting the host name and path from the URL, creating a socket, sending a request, and receiving a response.
+
+Let’s start with parsing the URL. I’m going to make parsing a URL return a URL object, and I’ll put the parsing code into the constructor:
+
+```python
+import socket
+
+class URL:
+    def __init__(self, url):
+        # STEP 1. Parsing the URL Scheme
+        self.scheme, url = url.split("://", 1)
+        assert self.scheme == "http"
+
+        # STEP 2. Parsing the Host and Path
+        if "/" not in url:
+            url = url + "/"
+        self.host, url = url.split("/", 1)
+        self.path = "/" + url
+
+    def request(self):
+        # STEP 3. Creating a TCP Socket
+        s = socket.socket(
+            family=socket.AF_INET,
+            type=socket.SOCK_STREAM,
+            proto=socket.IPPROTO_TCP,
+        )
+        print("Socket created!")
+        print("File descriptor:", s.fileno())
+
+        # STEP 4. Establishing a TCP Connection
+        s.connect((self.host, 80))
+        print("Connected to:", self.host)
+
+        # STEP 5. Closing the Socket
+        # Uncomment this line when you want to run the program.
+        # s.close()
+
+# STEP 6. Running the Program
+# Uncomment the lines below when you want to run the program.
+# url = URL("http://example.org/index.html")
+# print(url.scheme)
+# print(url.host)
+# print(url.path)
+# url.request()
+```
+
+### Python API Documentation
+
+- [str.split()](https://docs.python.org/3/library/stdtypes.html#str.split)
+- [socket.socket()](https://docs.python.org/3/library/socket.html#socket.socket)
+- [socket.fileno()](https://docs.python.org/3/library/socket.html#socket.socket.fileno)
+- [socket.connect()](https://docs.python.org/3/library/socket.html#socket.socket.connect)
+- [socket.close()](https://docs.python.org/3/library/socket.html#socket.socket.close)
+- [print()](https://docs.python.org/3/library/functions.html#print)
+
+### Step 1. Parsing the URL Scheme
+
+The constructor splits the URL at the first occurrence of ://. For http://example.org/index.html, the scheme becomes http, and the remaining local URL value becomes example.org/index.html. **The scheme is stored as an instance attribute**, while the remaining URL is a local variable. The assertion checks that the scheme is http, the only scheme this implementation supports.
+
+### Step 2. Parsing the Host and Path
+
+If the remaining URL contains no slash, the constructor appends one to supply the default path. It then splits at the first slash, separating the hostname from the rest of the path. Since splitting removes the separator, the code restores the leading slash. In this example, the host becomes example.org and the path becomes /index.html.
+
+### Step 3. Creating a TCP Socket
+
+The socket constructor asks the operating system to create a communication endpoint. AF_INET selects IPv4, SOCK_STREAM selects a connection-oriented byte stream, and IPPROTO_TCP specifies TCP. The local variable s refers to the resulting Python socket object. The print statements confirm its creation and display its file descriptor, the integer identifier the operating system uses to refer to this resource.
+
+### Step 4. Establishing a TCP Connection
+
+The connect method receives a single address argument: a tuple containing the hostname and port. Port 80 is the default port for HTTP. The hostname is resolved to an IP address, and the operating system establishes a TCP connection to the server. The socket can now send and receive bytes, but no HTTP request has been sent yet.
+
+## Downloading Web pages/5 : Request and Response
+
+Now that we have a connection, we make a request to the other server. To do so, we send it some data using the send method:
+
+```python
+class URL:
+    # ...
+    def request(self):
+        # ...
+
+        # STEP 5. Construct and send an HTTP request
+        request = "GET {} HTTP/1.0\r\n".format(self.path)
+        request += "Host: {}\r\n".format(self.host)
+        request += "\r\n"
+        s.send(request.encode("utf8"))
+
+        # STEP 6. Create a stream for reading the response
+        response = s.makefile("r", encoding="utf8", newline="\r\n")
+
+        # STEP 7. Parse the HTTP status line
+        statusline = response.readline()
+        version, status, explanation = statusline.split(" ", 2)
+        assert status == "200", "{}: {}".format(status, explanation)
+
+        # STEP 8. Parse the HTTP response headers
+        response_headers = {}
+        while True:
+            line = response.readline()
+            if line == "\r\n": break
+            header, value = line.split(":", 1)
+            response_headers[header.lower()] = value.strip()
+
+        # STEP 9. Check for unsupported encodings
+        assert "transfer-encoding" not in response_headers
+        assert "content-encoding" not in response_headers
+
+        # STEP 10. Read the HTTP response body
+        content = response.read()
+
+        # STEP 11. Close the connection
+        s.close()
+
+        # STEP 12. Return the response body
+        return content
+
+# STEP 13. Run the program
+url = URL("http://example.org/")
+content = url.request()
+print(content)
+```
+
+### Python API Documentation
+
+- [str.format()](https://docs.python.org/3/library/stdtypes.html#str.format)
+- [str.encode()](https://docs.python.org/3/library/stdtypes.html#str.encode)
+- [socket.send()](https://docs.python.org/3/library/socket.html#socket.socket.send)
+- [socket.makefile()](https://docs.python.org/3/library/socket.html#socket.socket.makefile)
+- [readline()](https://docs.python.org/3/library/io.html#io.TextIOBase.readline)
+- [str.split()](https://docs.python.org/3/library/stdtypes.html#str.split)
+- [str.lower()](https://docs.python.org/3/library/stdtypes.html#str.lower)
+- [str.strip()](https://docs.python.org/3/library/stdtypes.html#str.strip)
+- [read()](https://docs.python.org/3/library/io.html#io.TextIOBase.read)
+- [socket.close()](https://docs.python.org/3/library/socket.html#socket.socket.close)
+- [print()](https://docs.python.org/3/library/functions.html#print)
+
+## Downloading Web pages/6 : Displaying the HTML
+
+In HTML, there are tags and text. Each tag starts with a < and ends with a >; generally speaking, tags tell you what kind of thing some content is, while text is the actual content. Most tags come in pairs of a start and an end tag; for example, the title of the page is enclosed in a pair of tags: <title> and </title>. Each tag, inside the angle brackets, has a tag name (like title here), and then optionally a space followed by attributes, and its pair has a / followed by the tag name (and no attributes).
+
+```python
+#...
+def show(body):
+    in_tag = False
+    for c in body:
+        if c == "<":
+            in_tag = True
+        elif c == ">":
+            in_tag = False
+        elif not in_tag:
+            print(c, end="")
+
+def load(url):
+    body = url.request()
+    show(body)
+
+if __name__ == "__main__":
+    import sys
+    load(URL(sys.argv[1]))
+```
+
+## Downloading Web pages/7 : Encrypted Connection
+
+```python
+import socket
+import ssl  # Added to the previous code for SSL/TLS support.
+
+class URL:
+    def __init__(self, url):
+        self.scheme, url = url.split("://", 1)
+        # Modified for SSL/TLS: accept HTTPS as well as HTTP.
+        assert self.scheme in ["http", "https"]
+
+        # Added for SSL/TLS: select the default port for each scheme.
+        if self.scheme == "http":
+            self.port = 80
+        elif self.scheme == "https":
+            self.port = 443
+
+        if "/" not in url:
+            url = url + "/"
+        self.host, url = url.split("/", 1)
+        self.path = "/" + url
+
+        # Added for SSL/TLS support: allow an explicit port to override the default.
+        if ":" in self.host:
+            self.host, port = self.host.split(":", 1)
+            self.port = int(port)
+
+    def request(self):
+        s = socket.socket(
+            family=socket.AF_INET,
+            type=socket.SOCK_STREAM,
+            proto=socket.IPPROTO_TCP,
+        )
+
+        # Modified for SSL/TLS: connect using the selected port instead of port 80.
+        s.connect((self.host, self.port))
+        # Added for SSL/TLS: wrap HTTPS connections with certificate verification.
+        if self.scheme == "https":
+            ctx = ssl.create_default_context()
+            s = ctx.wrap_socket(s, server_hostname=self.host)
+
+        request = "GET {} HTTP/1.0\r\n".format(self.path)
+        request += "Host: {}\r\n".format(self.host)
+        request += "\r\n"
+        s.send(request.encode("utf8"))
+
+        response = s.makefile("r", encoding="utf8", newline="\r\n")
+        statusline = response.readline()
+        version, status, explanation = statusline.split(" ", 2)
+        assert status == "200", "{}: {}".format(status, explanation)
+
+        response_headers = {}
+        while True:
+            line = response.readline()
+            if line == "\r\n":
+                break
+            header, value = line.split(":", 1)
+            response_headers[header.lower()] = value.strip()
+
+        assert "transfer-encoding" not in response_headers
+        assert "content-encoding" not in response_headers
+        content = response.read()
+        s.close()
+        return content
+
+def show(body):
+    in_tag = False
+    for c in body:
+        if c == "<":
+            in_tag = True
+        elif c == ">":
+            in_tag = False
+        elif not in_tag:
+            print(c, end="")
+
+def load(url):
+    body = url.request()
+    show(body)
+
+if __name__ == "__main__":
+    import sys
+    load(URL(sys.argv[1]))
+```
+
+### Python API Documentation
+
+- [int()](https://docs.python.org/3/library/functions.html#int)
+- [ssl.create_default_context()](https://docs.python.org/3/library/ssl.html#ssl.create_default_context)
+- [SSLContext.wrap_socket()](https://docs.python.org/3/library/ssl.html#ssl.SSLContext.wrap_socket)
+- [sys.argv](https://docs.python.org/3/library/sys.html#sys.argv)

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="846" height="256" viewBox="0 0 846 256" role="img" aria-labelledby="title desc">
+  <title id="title">URL structure</title>
+  <desc id="desc">In http://example.org/index.html, http is the scheme, example.org is the hostname, and /index.html is the path.</desc>
+  <rect width="846" height="256" fill="white"/>
+  <rect x="62" y="98" width="105" height="60" fill="#b3ddff"/>
+  <rect x="239" y="98" width="274" height="60" fill="#fcf2a9"/>
+  <rect x="513" y="98" width="273" height="60" fill="#ffbde2"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="700">
+    <text x="62" y="88" fill="#07465f">Scheme</text>
+    <text x="513" y="88" fill="#a80080">Path</text>
+    <text x="239" y="195" fill="#eb6e18">Hostname</text>
+  </g>
+  <g font-family="monospace" font-size="42">
+    <text x="66" y="144" fill="black">http</text>
+    <text x="168" y="144" fill="#333333">://</text>
+    <text x="243" y="144" fill="black">example.org</text>
+    <text x="517" y="144" fill="black">/index.html</text>
+  </g>
+</svg>

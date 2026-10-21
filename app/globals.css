@@ -96,6 +96,17 @@ button {
 .post-content h3 {
   font-size: 1.2rem;
 }
+.post-content .browser-gallery {
+  width: 100%;
+  text-align: center;
+}
+.post-content .browser-gallery img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
 .post-content p,
 .post-content ul,
 .post-content ol,

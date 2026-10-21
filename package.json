@@ -19,8 +19,10 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "rehype-katex": "^7.0.1",
+    "rehype-pretty-code": "^0.14.5",
     "remark-frontmatter": "^5.0.0",
     "remark-math": "^6.0.0",
+    "shiki": "^4.5.0",
     "simple-icons": "^16.30.0"
   },
   "devDependencies": {

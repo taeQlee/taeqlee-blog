@@ -8,7 +8,16 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   options: {
     remarkPlugins: ["remark-frontmatter", "remark-math"],
-    rehypePlugins: ["rehype-katex"],
+    rehypePlugins: [
+      "rehype-katex",
+      [
+        "rehype-pretty-code",
+        {
+          theme: "github-dark",
+          keepBackground: true,
+        },
+      ],
+    ],
   },
 });
 

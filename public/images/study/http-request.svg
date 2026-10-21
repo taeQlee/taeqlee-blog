@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="712" height="274" viewBox="0 0 712 274" role="img" aria-labelledby="title desc">
+  <title id="title">Anatomy of an HTTP GET request</title>
+  <desc id="desc">GET is the method, /index.html is the path, HTTP/1.0 is the HTTP version, and Host is a header with the value example.org.</desc>
+  <rect width="712" height="274" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="700">
+    <text x="34" y="65" fill="#07465f">Method</text>
+    <text x="329" y="65" fill="#eb6e18">Path</text>
+    <text x="436" y="65" fill="#a80080">HTTP Version</text>
+    <text x="34" y="244" fill="#85002e">Header</text>
+    <text x="187" y="244" fill="#20572c">Value</text>
+  </g>
+  <g>
+    <rect x="34" y="75" width="81" height="60" fill="#b3ddff"/>
+    <rect x="139" y="75" width="274" height="60" fill="#fcf2a9"/>
+    <rect x="437" y="75" width="202" height="60" fill="#ffbde2"/>
+    <rect x="34" y="147" width="105" height="60" fill="#f8d399"/>
+    <rect x="187" y="147" width="274" height="60" fill="#b5ffca"/>
+  </g>
+  <g font-family="monospace" font-size="42" fill="black">
+    <text x="38" y="121">GET</text>
+    <text x="144" y="121">/index.html</text>
+    <text x="441" y="121">HTTP/1.0</text>
+    <text x="38" y="193">Host:</text>
+    <text x="191" y="193">example.org</text>
+  </g>
+</svg>
