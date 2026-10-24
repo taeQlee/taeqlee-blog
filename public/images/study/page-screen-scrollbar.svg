@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="508" height="388" viewBox="0 0 508 388" role="img" aria-labelledby="title desc">
+  <title id="title">Page, screen, and scrollbar</title>
+  <desc id="desc">A screen shows part of a taller page. Dashed lines connect the visible portion of the page to the scrollbar thumb.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#252323"/>
+    </marker>
+  </defs>
+  <rect width="508" height="388" fill="white"/>
+  <g fill="none" stroke="#929598" stroke-width="2">
+    <rect x="140" y="3" width="191" height="381"/>
+    <path d="M166 29H306" stroke-width="8" stroke-linecap="round"/>
+    <path d="M164 50H308 M164 65H308 M164 80H308 M164 95H308 M164 140H308 M164 170H308 M164 186H308 M164 202H308 M164 218H308 M164 234H308 M164 250H308 M164 266H308 M164 282H308 M164 298H308 M164 330H308 M164 346H308 M164 362H308"/>
+    <rect x="132" y="151" width="207" height="163" stroke-width="10"/>
+    <path d="M140 157V309" stroke="white" stroke-width="2"/>
+  </g>
+  <g stroke="#252323" fill="none">
+    <path d="M26 3H150"/>
+    <path d="M43.5 4V383" marker-start="url(#arrow)" marker-end="url(#arrow)" stroke-width="1.5"/>
+    <path d="M76 132V318Q76 330 87 330H371Q383 330 383 318V132"/>
+    <rect x="74" y="107" width="309" height="25" fill="#929598"/>
+    <path d="M108 133V329" marker-start="url(#arrow)" marker-end="url(#arrow)" stroke-width="1.5"/>
+  </g>
+  <g fill="white">
+    <path d="M89 119 99 113V126Z M105 113 115 119 105 126Z"/>
+    <rect x="154" y="115" width="154" height="10"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#252323">
+    <text x="2" y="198">Page</text>
+    <text transform="translate(100 253) rotate(-90)">Screen</text>
+    <text transform="translate(493 196) rotate(90)">Scrollbar</text>
+    <text x="319" y="129">*</text>
+  </g>
+  <g fill="#252323">
+    <rect x="142" y="148" width="5" height="4"/>
+    <rect x="150" y="148" width="5" height="4"/>
+    <rect x="158" y="148" width="5" height="4"/>
+    <rect x="166" y="148" width="4" height="4"/>
+  </g>
+  <g stroke="#252323" stroke-width="2">
+    <rect x="448.5" y="3" width="31.5" height="381" rx="16" fill="#575757"/>
+    <path d="M449 37H480V350H449Z" fill="white"/>
+  </g>
+  <path d="M339 152H465 M339 314H465" fill="none" stroke="#ff4545" stroke-dasharray="6 4"/>
+  <rect x="448.5" y="152" width="31.5" height="162" rx="16" fill="#575757" stroke="#252323" stroke-width="2"/>
+  <g fill="white">
+    <path d="M459 26 465.5 16 472 26Z M457 361H470L463.5 371Z"/>
+    <rect x="456" y="225" width="17" height="3.5" rx="1.75"/>
+    <rect x="456" y="233" width="17" height="3.5" rx="1.75"/>
+    <rect x="456" y="241" width="17" height="3.5" rx="1.75"/>
+  </g>
+</svg>
